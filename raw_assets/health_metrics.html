@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Health Metrics - Fitness Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e87a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Lexend', sans-serif; }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(48, 232, 122, 0.15) 0%, rgba(48, 232, 122, 0) 100%);
+        }
+        .metric-card-glow {
+            box-shadow: 0 4px 20px -5px rgba(48, 232, 122, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
+<!-- Mobile Container (Phone Form Factor) -->
+<div class="max-w-[430px] mx-auto min-h-screen bg-background-light dark:bg-background-dark relative flex flex-col pb-24">
+<!-- Header -->
+<header class="px-6 pt-8 pb-4 flex justify-between items-center sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md z-30">
+<div>
+<h1 class="text-2xl font-bold tracking-tight">Health Metrics</h1>
+<p class="text-sm text-slate-500 dark:text-primary/60 font-medium">Daily Overview</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5">
+<img alt="Profile" class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd4-iPyWaSbNzVRs6CJETbLtGjyYofJap8cjsJzLlir3s8Pxi4YMyMOTQ5TrT2TOClha886cfhSfUluw7L3vWjyruMLu7QWHnizOGC5-EQr5Lyiwmw862NoyP1qutIOtmf-TAReulCjy_WyHV9Zrzq9Ku8HPmMSkO3_KvdhNsvVKBD0LMnpHGCT6_MiUoNZlKzJHjNFVd4t5xXu3m9ikjZpmBFxAENhDzNxOihJFKoZrHkaj1PmozcqbR9ddK2EBYKKmkxAuIfHi6K"/>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="px-4 space-y-6">
+<!-- Weight Trends Chart Section -->
+<section class="bg-white dark:bg-primary/5 rounded-xl p-5 border border-slate-200 dark:border-primary/10 metric-card-glow">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="text-lg font-semibold">Weight Trend</h2>
+<div class="flex items-center gap-2">
+<span class="text-3xl font-bold">72.4<span class="text-sm font-medium text-slate-500 ml-1">kg</span></span>
+<span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-medium">-1.2kg</span>
+</div>
+</div>
+<div class="flex gap-1 bg-slate-100 dark:bg-primary/10 p-1 rounded-lg">
+<button class="px-3 py-1 text-xs rounded-md bg-white dark:bg-primary text-slate-900 dark:text-background-dark font-semibold shadow-sm">1M</button>
+<button class="px-3 py-1 text-xs rounded-md text-slate-500">3M</button>
+<button class="px-3 py-1 text-xs rounded-md text-slate-500">6M</button>
+</div>
+</div>
+<!-- Custom SVG Chart -->
+<div class="relative h-48 w-full mt-4">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 400 150">
+<!-- Grid Lines -->
+<line class="stroke-slate-200 dark:stroke-primary/5" stroke-dasharray="4" stroke-width="1" x1="0" x2="400" y1="20" y2="20"></line>
+<line class="stroke-slate-200 dark:stroke-primary/5" stroke-dasharray="4" stroke-width="1" x1="0" x2="400" y1="70" y2="70"></line>
+<line class="stroke-slate-200 dark:stroke-primary/5" stroke-dasharray="4" stroke-width="1" x1="0" x2="400" y1="120" y2="120"></line>
+<!-- Gradient Fill -->
+<path class="fill-primary/10" d="M0,130 L0,80 C50,90 80,40 130,50 C180,60 220,110 280,95 C340,80 370,10 400,30 L400,130 Z"></path>
+<!-- Main Line -->
+<path class="stroke-primary" d="M0,80 C50,90 80,40 130,50 C180,60 220,110 280,95 C340,80 370,10 400,30" fill="none" stroke-linecap="round" stroke-width="3"></path>
+<!-- Data Point -->
+<circle class="fill-primary" cx="280" cy="95" r="6"></circle>
+<circle class="fill-primary/20" cx="280" cy="95" r="12"></circle>
+</svg>
+<!-- Chart Labels -->
+<div class="flex justify-between mt-4 text-[10px] font-medium text-slate-400 uppercase tracking-widest">
+<span>1 Oct</span>
+<span>8 Oct</span>
+<span>15 Oct</span>
+<span>22 Oct</span>
+<span>29 Oct</span>
+</div>
+</div>
+</section>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Heart Rate Card -->
+<div class="bg-white dark:bg-primary/5 rounded-xl p-4 border border-slate-200 dark:border-primary/10 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500">
+<span class="material-icons-round text-lg">favorite</span>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 dark:bg-primary/20 flex items-center justify-center">
+<span class="material-icons-round text-sm text-slate-600 dark:text-primary">add</span>
+</button>
+</div>
+<div>
+<p class="text-slate-500 dark:text-primary/60 text-xs font-medium uppercase tracking-wider mb-1">Heart Rate</p>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold">72</span>
+<span class="text-xs font-medium text-slate-400">BPM</span>
+</div>
+<div class="h-1 w-full bg-slate-100 dark:bg-primary/10 rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-red-500 w-[65%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Sleep Card -->
+<div class="bg-white dark:bg-primary/5 rounded-xl p-4 border border-slate-200 dark:border-primary/10 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+<span class="material-icons-round text-lg">bedtime</span>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 dark:bg-primary/20 flex items-center justify-center">
+<span class="material-icons-round text-sm text-slate-600 dark:text-primary">add</span>
+</button>
+</div>
+<div>
+<p class="text-slate-500 dark:text-primary/60 text-xs font-medium uppercase tracking-wider mb-1">Sleep</p>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold">7.2</span>
+<span class="text-xs font-medium text-slate-400">HRS</span>
+</div>
+<div class="h-1 w-full bg-slate-100 dark:bg-primary/10 rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-indigo-500 w-[85%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Water Card -->
+<div class="bg-white dark:bg-primary/5 rounded-xl p-4 border border-slate-200 dark:border-primary/10 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+<span class="material-icons-round text-lg">water_drop</span>
+</div>
+<button class="w-6 h-6 rounded-full bg-slate-100 dark:bg-primary/20 flex items-center justify-center">
+<span class="material-icons-round text-sm text-slate-600 dark:text-primary">add</span>
+</button>
+</div>
+<div>
+<p class="text-slate-500 dark:text-primary/60 text-xs font-medium uppercase tracking-wider mb-1">Water</p>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold">2.4</span>
+<span class="text-xs font-medium text-slate-400">LITERS</span>
+</div>
+<div class="h-1 w-full bg-slate-100 dark:bg-primary/10 rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-blue-500 w-[60%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Add More Action Card -->
+<div class="bg-primary rounded-xl p-4 flex flex-col justify-center items-center h-40 text-background-dark cursor-pointer group hover:bg-primary/90 transition-colors">
+<div class="w-12 h-12 rounded-full bg-background-dark/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-icons-round text-3xl">add_circle</span>
+</div>
+<span class="font-bold text-sm">Add Metrics</span>
+<span class="text-[10px] opacity-60 font-medium">Log your day</span>
+</div>
+</div>
+<!-- Recent Activity Mini Section -->
+<section class="mt-2">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-sm font-bold uppercase tracking-widest text-slate-400">Recent Activity</h3>
+<button class="text-xs font-bold text-primary">See All</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-white dark:bg-primary/5 p-3 rounded-lg border border-slate-100 dark:border-primary/10">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-icons-round">directions_run</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-semibold">Morning Run</h4>
+<p class="text-xs text-slate-500">4.2 km • 24 mins</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">320</p>
+<p class="text-[10px] text-slate-400 uppercase">kcal</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Tab Navigation (iOS style) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/80 dark:bg-background-dark/90 backdrop-blur-xl border-t border-slate-200 dark:border-primary/10 px-6 py-4 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-icons-round text-2xl">grid_view</span>
+<span class="text-[10px] font-bold">Today</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round text-2xl">insights</span>
+<span class="text-[10px] font-medium">Trends</span>
+</button>
+<div class="relative -top-8">
+<button class="w-14 h-14 bg-primary rounded-full shadow-lg shadow-primary/40 flex items-center justify-center text-background-dark">
+<span class="material-icons-round text-3xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round text-2xl">emoji_events</span>
+<span class="text-[10px] font-medium">Goals</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-icons-round text-2xl">person_outline</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</nav>
+<!-- Safe area indicator for modern phones -->
+<div class="h-8 w-full"></div>
+</div>
+</body></html>

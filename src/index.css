@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+body {
+  font-family: 'Lexend', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  min-height: max(884px, 100dvh);
+}
+
+.ring-gradient-steps {
+  background: conic-gradient(#30e87a 85%, transparent 0);
+}
+
+.ring-gradient-calories {
+  background: conic-gradient(#30e87a 65%, transparent 0);
+  opacity: 0.7;
+}
+
+.ring-gradient-minutes {
+  background: conic-gradient(#30e87a 45%, transparent 0);
+  opacity: 0.4;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Chart & Effects */
+.chart-gradient {
+  background: linear-gradient(180deg, rgba(48, 232, 122, 0.15) 0%, rgba(48, 232, 122, 0) 100%);
+}
+
+.metric-card-glow {
+  box-shadow: 0 4px 20px -5px rgba(48, 232, 122, 0.1);
+}
+
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(48, 232, 122, 0.15);
+}
+
+.ios-blur {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
