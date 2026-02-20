@@ -2,24 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Default Green Theme (Vigor) */
+    --color-primary: 48 232 122;
+    /* #30e87a */
+    --bg-main: 11 33 23;
+    /* #0b2117 (Dark Greenish Black) */
+    --bg-surface: 26 46 33;
+    /* #1a2e21 */
+    --bg-highlight: 37 63 47;
+    /* #253f2f */
+    --text-main: 241 245 249;
+    /* Slate-100 */
+    --text-muted: 148 163 184;
+    /* Slate-400 */
+    --border-main: 37 63 47;
+    /* #253f2f */
+  }
+
+  [data-theme='blue'] {
+    --color-primary: 59 130 246;
+    /* Blue-500 */
+    --bg-main: 15 23 42;
+    /* Slate-900 */
+    --bg-surface: 30 41 59;
+    /* Slate-800 */
+    --bg-highlight: 51 65 85;
+    /* Slate-700 */
+    --text-main: 248 250 252;
+    /* Slate-50 */
+    --text-muted: 148 163 184;
+    /* Slate-400 */
+    --border-main: 51 65 85;
+    /* Slate-700 */
+  }
+
+  [data-theme='purple'] {
+    --color-primary: 168 85 247;
+    /* Purple-500 */
+    --bg-main: 19 8 33;
+    /* #130821 (Deep Purple Black) */
+    --bg-surface: 35 16 61;
+    /* #23103d */
+    --bg-highlight: 58 27 92;
+    --text-main: 250 245 255;
+    /* Purple-50 */
+    --text-muted: 192 132 252;
+    /* Purple-300 */
+    --border-main: 58 27 92;
+  }
+
+  [data-theme='red'] {
+    --color-primary: 239 68 68;
+    /* Red-500 */
+    --bg-main: 10 10 10;
+    /* Neutral-950 */
+    --bg-surface: 38 38 38;
+    /* Neutral-800 */
+    --bg-highlight: 64 64 64;
+    /* Neutral-700 */
+    --text-main: 255 255 255;
+    --text-muted: 163 163 163;
+    /* Neutral-400 */
+    --border-main: 64 64 64;
+  }
+
+  [data-theme='orange'] {
+    --color-primary: 249 115 22;
+    /* Orange-500 */
+    --bg-main: 20 10 5;
+    --bg-surface: 43 22 10;
+    --bg-highlight: 67 35 15;
+    --text-main: 255 247 237;
+    /* Orange-50 */
+    --text-muted: 253 186 116;
+    /* Orange-300 */
+    --border-main: 67 35 15;
+  }
+
+  [data-theme='cyan'] {
+    --color-primary: 34 211 238;
+    /* Cyan-400 */
+    --bg-main: 8 51 68;
+    /* Cyan-950 */
+    --bg-surface: 22 78 99;
+    /* Cyan-900 */
+    --bg-highlight: 21 94 117;
+    /* Cyan-800 */
+    --text-main: 236 254 255;
+    /* Cyan-50 */
+    --text-muted: 103 232 249;
+    /* Cyan-300 */
+    --border-main: 21 94 117;
+  }
+}
+
 /* Custom Styles */
 body {
   font-family: 'Lexend', sans-serif;
   -webkit-tap-highlight-color: transparent;
-  min-height: max(884px, 100dvh);
+  width: 100%;
+  height: 100%;
+  @apply bg-background text-text-main;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 
+  Using rgba(var(--color-primary), alpha) for gradients 
+  where Tailwind utility classes aren't used directly 
+*/
+
 .ring-gradient-steps {
-  background: conic-gradient(#30e87a 85%, transparent 0);
+  background: conic-gradient(rgb(var(--color-primary)) 85%, transparent 0);
 }
 
 .ring-gradient-calories {
-  background: conic-gradient(#30e87a 65%, transparent 0);
+  background: conic-gradient(rgb(var(--color-primary)) 65%, transparent 0);
   opacity: 0.7;
 }
 
 .ring-gradient-minutes {
-  background: conic-gradient(#30e87a 45%, transparent 0);
+  background: conic-gradient(rgb(var(--color-primary)) 45%, transparent 0);
   opacity: 0.4;
 }
 
@@ -40,11 +149,11 @@ body {
 
 /* Custom Chart & Effects */
 .chart-gradient {
-  background: linear-gradient(180deg, rgba(48, 232, 122, 0.15) 0%, rgba(48, 232, 122, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--color-primary), 0.15) 0%, rgba(var(--color-primary), 0) 100%);
 }
 
 .metric-card-glow {
-  box-shadow: 0 4px 20px -5px rgba(48, 232, 122, 0.1);
+  box-shadow: 0 4px 20px -5px rgba(var(--color-primary), 0.1);
 }
 
 .timeline-line::before {
@@ -54,7 +163,7 @@ body {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: rgba(48, 232, 122, 0.15);
+  background: rgba(var(--color-primary), 0.15);
 }
 
 .ios-blur {

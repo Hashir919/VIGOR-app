@@ -1,5 +1,6 @@
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = `${BASE_URL}/api`;
 
 
 const getHeaders = () => {
@@ -82,6 +83,62 @@ export const updateUser = async (id, data) => {
     });
     if (!res.ok) throw new Error('Failed to update user');
     return res.json();
+};
+
+// Helper to handle responses safely
+const handleResponse = async (res) => {
+    const contentType = res.headers.get('content-type');
+    let data;
+
+    if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+    } else {
+        const text = await res.text();
+        throw new Error(`Server returned non-JSON response (${res.status}): ${text.slice(0, 100)}...`);
+    }
+
+    if (!res.ok) {
+        throw new Error(data.message || data.error || `Request failed with status ${res.status}`);
+    }
+
+    return data;
+};
+
+// Security & Auth API
+export const changePassword = async (currentPassword, newPassword) => {
+    const res = await fetch(`${API_URL}/auth/change-password`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ currentPassword, newPassword })
+    });
+    return handleResponse(res);
+};
+
+export const forgotPassword = async (email) => {
+    const res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ email })
+    });
+    return handleResponse(res);
+};
+
+export const verifyResetCode = async (email, code) => {
+    const res = await fetch(`${API_URL}/auth/verify-reset-code`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ email, code })
+    });
+    return handleResponse(res);
+};
+
+export const resetPassword = async (email, code, newPassword) => {
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ email, code, newPassword })
+    });
+    return handleResponse(res);
 };
 
 // Dashboard API

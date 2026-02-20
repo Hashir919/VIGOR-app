@@ -5,7 +5,7 @@ import { fetchDashboardData, logWater } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function FitnessDashboard() {
-    const { user } = useAuth();
+    useAuth(); // Just call it if needed for side effects, but we don't use 'user'
     const [data, setData] = useState(null); // Renamed from dashboardData
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -57,13 +57,7 @@ export default function FitnessDashboard() {
         }
     };
 
-    const formatCurrentTime = () => {
-        let hours = currentTime.getHours();
-        const minutes = currentTime.getMinutes().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        return `${hours}:${minutes} `;
-    };
+    // formatCurrentTime is unused, removing it.
 
     if (loading) {
         return (
@@ -90,7 +84,7 @@ export default function FitnessDashboard() {
         );
     }
 
-    const { metrics, nutrition, progress, quickActions, goals } = data;
+    const { metrics, nutrition, progress, quickActions } = data;
     const greeting = currentTime.getHours() < 12 ? 'Morning' : currentTime.getHours() < 18 ? 'Afternoon' : 'Evening';
 
     return (
@@ -224,7 +218,7 @@ export default function FitnessDashboard() {
 
                     {/* Quick Actions Row */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        {quickActions.map((action, index) => {
+                        {quickActions.map((action) => {
                             const isWater = action.action === 'log-water';
                             const Content = () => (
                                 <>
@@ -281,7 +275,7 @@ export default function FitnessDashboard() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="bg-slate-50/50 dark:bg-white/5 rounded-[2.5rem] p-10 text-center border border-dashed border-slate-200 dark:border-white/10">
+                            <div className="bg-surface-highlight rounded-[2.5rem] p-10 text-center border border-dashed border-border">
                                 <p className="text-sm text-slate-500 font-bold mb-4">No recent workouts found.</p>
                                 <Link to="/log-workout" className="inline-flex items-center gap-2 bg-primary text-background-dark px-6 py-2 rounded-xl font-black text-xs">
                                     <span className="material-icons-round text-sm">add</span>
@@ -293,7 +287,7 @@ export default function FitnessDashboard() {
 
                     {/* Nutrition Plan Broad Card */}
                     <Link to="/nutrition" className="group block bg-gradient-to-r from-primary to-primary-dark p-[1px] rounded-3xl shadow-xl shadow-primary/10 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20">
-                        <div className="bg-white dark:bg-[#0f172a] rounded-[23px] p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="bg-surface rounded-[23px] p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:rotate-12 transition-transform">
                                     <span className="material-icons-round text-3xl">restaurant</span>
@@ -326,7 +320,7 @@ export default function FitnessDashboard() {
                                         <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min((nutrition.caloriesConsumed / nutrition.caloriesTarget) * 100, 100)}%` }}></div>
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-all">
+                                <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background transition-all">
                                     <span className="material-icons-round">chevron_right</span>
                                 </div>
                             </div>

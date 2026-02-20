@@ -9,11 +9,13 @@ export default {
     theme: {
         extend: {
             colors: {
-                "primary": "#30e87a",
-                "background-light": "#f6f8f7",
-                "background-dark": "#112117",
-                "surface-dark": "#1a2e21",
-                "border-dark": "#253f2f",
+                "primary": "rgb(var(--color-primary) / <alpha-value>)",
+                "background": "rgb(var(--bg-main) / <alpha-value>)",
+                "surface": "rgb(var(--bg-surface) / <alpha-value>)",
+                "surface-highlight": "rgb(var(--bg-highlight) / <alpha-value>)",
+                "text-main": "rgb(var(--text-main) / <alpha-value>)",
+                "text-muted": "rgb(var(--text-muted) / <alpha-value>)",
+                "border": "rgb(var(--border-main) / <alpha-value>)",
             },
             fontFamily: {
                 "display": ["Lexend", "sans-serif"],

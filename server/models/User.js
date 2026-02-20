@@ -17,8 +17,25 @@ const userSchema = new mongoose.Schema({
         streak: { type: Number, default: 0 },
         totalKm: { type: Number, default: 0 }
     },
+    preferences: {
+        language: { type: String, default: 'English (US)' },
+        connectedDevices: { type: [String], default: [] },
+        notifications: { type: Boolean, default: true },
+        security2FA: { type: Boolean, default: false }
+    },
+    achievements: [{
+        id: String,
+        name: String,
+        description: String,
+        icon: String,
+        dateEarned: Date
+    }],
     password: { type: String, required: true },
-    profilePicture: String
+    profilePicture: String,
+    role: { type: String, default: 'USER', enum: ['USER', 'ADMIN'] },
+    isActive: { type: Boolean, default: true },
+    resetPasswordCode: String,
+    resetPasswordExpires: Date
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

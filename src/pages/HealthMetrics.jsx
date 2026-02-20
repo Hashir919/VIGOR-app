@@ -102,7 +102,7 @@ export default function HealthMetrics() {
         return (
             <div className="flex flex-col items-center justify-center py-40">
                 <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                <p className="mt-6 text-slate-500 font-bold uppercase tracking-widest text-xs">Syncing Biometrics...</p>
+                <p className="mt-6 text-text-muted font-bold uppercase tracking-widest text-xs">Syncing Biometrics...</p>
             </div>
         );
     }
@@ -112,7 +112,7 @@ export default function HealthMetrics() {
             <div className="flex flex-col items-center justify-center py-40 bg-rose-500/5 rounded-[3rem] border border-rose-500/10">
                 <span className="material-icons-round text-5xl text-rose-500 mb-4">cloud_off</span>
                 <h2 className="text-xl font-black mb-2">Sync Failed</h2>
-                <p className="text-slate-500 font-bold mb-8">{error}</p>
+                <p className="text-text-muted font-bold mb-8">{error}</p>
                 <button
                     onClick={() => loadHistory(range)}
                     className="bg-rose-500 text-white px-8 py-3 rounded-2xl font-black text-sm hover:scale-105 transition-all shadow-lg shadow-rose-500/20"
@@ -130,7 +130,7 @@ export default function HealthMetrics() {
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tighter">Health Metrics</h1>
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mt-2">Track your long-term progress</p>
+                    <p className="text-text-muted font-bold uppercase tracking-widest text-xs mt-2">Track your long-term progress</p>
                 </div>
                 <div className="flex gap-4">
                     <button
@@ -140,7 +140,7 @@ export default function HealthMetrics() {
                         <span className="material-icons-round">add</span>
                         Log Metric
                     </button>
-                    <div className="w-12 h-12 rounded-2xl border-2 border-primary/20 p-1 bg-white dark:bg-primary/5">
+                    <div className="w-12 h-12 rounded-2xl border-2 border-primary/20 p-1 bg-surface-highlight">
                         <img alt="Profile" className="w-full h-full rounded-xl object-cover" src="https://ui-avatars.com/api/?name=User&background=30e87a&color=0f172a" />
                     </div>
                 </div>
@@ -150,7 +150,7 @@ export default function HealthMetrics() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
                 {/* Weight Trend - Primary Chart (Column 1-8) */}
-                <section className="lg:col-span-8 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-[2.5rem] p-8 lg:p-10 shadow-sm relative overflow-hidden">
+                <section className="lg:col-span-8 bg-surface border border-border rounded-[2.5rem] p-8 lg:p-10 shadow-sm relative overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 relative z-10">
                         <div>
                             <h2 className="text-2xl font-black tracking-tight mb-2">Weight Journey</h2>
@@ -164,12 +164,12 @@ export default function HealthMetrics() {
                                 )}
                             </div>
                         </div>
-                        <div className="flex gap-2 bg-slate-50 dark:bg-black/20 p-1.5 rounded-2xl self-start sm:self-auto">
+                        <div className="flex gap-2 bg-surface-highlight p-1.5 rounded-2xl self-start sm:self-auto">
                             {['1W', '1M', '3M', '6M', '1Y'].map((r) => (
                                 <button
                                     key={r}
                                     onClick={() => setRange(r)}
-                                    className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${range === r ? 'bg-primary text-background-dark shadow-lg' : 'text-slate-500 hover:text-white'}`}
+                                    className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${range === r ? 'bg-primary text-background-dark shadow-lg' : 'text-text-muted hover:text-white'}`}
                                 >
                                     {r}
                                 </button>
@@ -205,7 +205,7 @@ export default function HealthMetrics() {
                                 </>
                             )}
                         </svg>
-                        <div className="flex justify-between mt-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-t border-slate-100 dark:border-white/5 pt-4">
+                        <div className="flex justify-between mt-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-t border-border pt-4">
                             <span>{history.length > 0 ? formatDateRange(history[0].date) : '-'}</span>
                             <span>{history.length > 2 ? formatDateRange(history[Math.floor(history.length / 2)].date) : '-'}</span>
                             <span>Today</span>
@@ -219,7 +219,7 @@ export default function HealthMetrics() {
                     {/* Compact Daily Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-1 gap-6">
                         {/* Heart Rate */}
-                        <div className="group bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-3xl p-6 transition-all hover:bg-primary/5 hover:border-primary/20">
+                        <div className="group bg-surface border border-border rounded-3xl p-6 transition-all hover:bg-primary/5 hover:border-primary/20">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="bg-red-500/10 p-2 rounded-xl text-red-500 group-hover:scale-110 transition-transform">
                                     <span className="material-icons-round">favorite</span>
@@ -233,7 +233,7 @@ export default function HealthMetrics() {
                         </div>
 
                         {/* Sleep */}
-                        <div className="group bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-3xl p-6 transition-all hover:bg-indigo-500/5 hover:border-indigo-500/20">
+                        <div className="group bg-surface border border-border rounded-3xl p-6 transition-all hover:bg-indigo-500/5 hover:border-indigo-500/20">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="bg-indigo-500/10 p-2 rounded-xl text-indigo-500 group-hover:scale-110 transition-transform">
                                     <span className="material-icons-round">bedtime</span>
@@ -249,7 +249,7 @@ export default function HealthMetrics() {
 
                     {/* Water Intake - Decorative & Functional */}
                     <div className="bg-gradient-to-br from-blue-600/10 to-blue-400/5 border border-blue-500/20 rounded-[2.5rem] p-8 relative overflow-hidden group">
-                        <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl opacity-50 group-hover:bg-blue-500/30 transition-all"></div>
+                        <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl opacity-50 group-hover:bg-surface-highlight transition-all"></div>
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="p-3 bg-blue-500 text-white rounded-2xl shadow-lg shadow-blue-500/20">
@@ -276,19 +276,19 @@ export default function HealthMetrics() {
                     </div>
 
                     {/* Recent Logs List - Now truly dynamic */}
-                    <div className="bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-3xl p-6">
+                    <div className="bg-surface border border-border rounded-3xl p-6">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-bold tracking-tight">Recent Logs</h2>
                         </div>
                         <div className="space-y-4">
                             {history.slice(-3).reverse().map((log, i) => (
-                                <div key={i} className="flex items-center gap-4 group cursor-pointer p-2 -m-2 rounded-2xl hover:bg-white/5 transition-all">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+                                <div key={i} className="flex items-center gap-4 group cursor-pointer p-2 -m-2 rounded-2xl hover:bg-surface-highlight transition-all">
+                                    <div className="w-10 h-10 rounded-xl bg-surface-highlight flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
                                         <span className="material-icons-round text-lg">history</span>
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-xs font-bold leading-none mb-1">{new Date(log.date).toLocaleDateString()}</p>
-                                        <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">{log.weight}kg · {log.heartRateAvg}bpm</p>
+                                        <p className="text-[10px] text-text-muted uppercase font-black tracking-widest">{log.weight}kg · {log.heartRateAvg}bpm</p>
                                     </div>
                                     <span className="material-icons-round text-slate-600 text-sm">chevron_right</span>
                                 </div>
@@ -302,12 +302,12 @@ export default function HealthMetrics() {
             {/* Log Metric Modal */}
             {showLogModal && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-background-dark/80 backdrop-blur-md" onClick={() => setShowLogModal(false)}></div>
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden">
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={() => setShowLogModal(false)}></div>
+                    <div className="bg-surface w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden">
                         <div className="p-8 sm:p-10">
                             <div className="flex justify-between items-center mb-8">
                                 <h3 className="text-2xl font-black tracking-tight">Log Health Data</h3>
-                                <button onClick={() => setShowLogModal(false)} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center">
+                                <button onClick={() => setShowLogModal(false)} className="w-10 h-10 rounded-full bg-surface-highlight flex items-center justify-center">
                                     <span className="material-icons-round">close</span>
                                 </button>
                             </div>
@@ -315,37 +315,37 @@ export default function HealthMetrics() {
                             <form onSubmit={handleLogSubmit} className="space-y-6">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Weight (kg)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Weight (kg)</label>
                                         <input
                                             type="number" step="0.1" required
-                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border border-border rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             value={logForm.weight}
                                             onChange={(e) => setLogForm({ ...logForm, weight: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Heart Rate (bpm)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Heart Rate (bpm)</label>
                                         <input
                                             type="number" required
-                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border border-border rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             value={logForm.heartRateAvg}
                                             onChange={(e) => setLogForm({ ...logForm, heartRateAvg: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Sleep (hrs)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Sleep (hrs)</label>
                                         <input
                                             type="number" step="0.5" required
-                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border border-border rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             value={logForm.sleepHours}
                                             onChange={(e) => setLogForm({ ...logForm, sleepHours: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Water (liters)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">Water (liters)</label>
                                         <input
                                             type="number" step="0.1" required
-                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border border-border rounded-2xl px-5 py-4 font-bold focus:ring-2 focus:ring-primary/20 outline-none"
                                             value={logForm.waterIntake}
                                             onChange={(e) => setLogForm({ ...logForm, waterIntake: e.target.value })}
                                         />

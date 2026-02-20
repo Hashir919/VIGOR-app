@@ -24,7 +24,11 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const res = await fetch('http://localhost:5000/api/auth/login', {
+        // Use relative path to work in both dev (via proxy) and prod (monolith)
+        // Or ensure we match the API_URL logic if it was exported.
+        // Since we are in Monolith mode, relative path is safest.
+        // Assuming /api prefix is standard.
+        const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -38,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const register = async (name, email, password) => {
-        const res = await fetch('http://localhost:5000/api/auth/register', {
+        const res = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password }),
@@ -57,8 +61,13 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const updateAuthUser = (updatedUser) => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, register, logout, updateAuthUser }}>
             {children}
         </AuthContext.Provider>
     );

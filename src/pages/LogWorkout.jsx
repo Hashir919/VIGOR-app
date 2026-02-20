@@ -5,14 +5,14 @@ import { createWorkout, searchExercises, fetchPopularExercises } from '../servic
 export default function LogWorkout() {
     const navigate = useNavigate();
     const [submitting, setSubmitting] = useState(false);
-    const [loading, setLoading] = useState(true);
+    // loading is unused in JSX, removing it.
 
     // Session State
     const [sessionTitle, setSessionTitle] = useState('Afternoon Session');
     const [startTime] = useState(new Date());
     const [seconds, setSeconds] = useState(0);
     const [exercisesInSession, setExercisesInSession] = useState([]);
-    const [status, setStatus] = useState('active'); // active, paused, finished
+    // status is unused, removing it.
 
     // Active Exercise Form State
     const [activeExercise, setActiveExercise] = useState(null);
@@ -36,13 +36,10 @@ export default function LogWorkout() {
 
     const loadData = async () => {
         try {
-            setLoading(true);
             const popular = await fetchPopularExercises();
             setPopularExercises(popular);
         } catch (err) {
             console.error('Failed to load exercises:', err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -196,7 +193,7 @@ export default function LogWorkout() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 px-6 py-3 rounded-2xl font-bold text-sm hover:bg-slate-50 dark:hover:bg-white/10 transition-all"
+                        className="flex items-center gap-2 bg-surface border border-border px-6 py-3 rounded-2xl font-bold text-sm hover:bg-surface-highlight transition-all"
                     >
                         Cancel
                     </button>
@@ -221,7 +218,7 @@ export default function LogWorkout() {
                     <div className="relative group">
                         <span className="material-icons-round absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
                         <input
-                            className="w-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-[2rem] py-5 pl-16 pr-6 focus:ring-2 focus:ring-primary/20 outline-none text-lg font-bold placeholder-slate-400"
+                            className="w-full bg-surface border border-border rounded-[2rem] py-5 pl-16 pr-6 focus:ring-2 focus:ring-primary/20 outline-none text-lg font-bold placeholder-slate-400"
                             placeholder="Search exercises (e.g. Bench Press, Squats...)"
                             type="text"
                             value={searchQuery}
@@ -229,7 +226,7 @@ export default function LogWorkout() {
                         />
                         {/* Search Results Dropdown */}
                         {(isSearching || searchResults.length > 0 || (searchQuery.length >= 2 && !isSearching && searchResults.length === 0)) && (
-                            <div className="absolute top-full left-0 w-full mt-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl z-50">
+                            <div className="absolute top-full left-0 w-full mt-4 bg-surface border border-border rounded-[2rem] overflow-hidden shadow-2xl z-50">
                                 {isSearching ? (
                                     <div className="p-10 flex flex-col items-center justify-center space-y-4">
                                         <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
@@ -240,7 +237,7 @@ export default function LogWorkout() {
                                         <button
                                             key={ex._id}
                                             onClick={() => selectExercise(ex)}
-                                            className="w-full text-left px-8 py-5 hover:bg-primary/10 border-b border-slate-50 dark:border-white/5 last:border-0 transition-colors flex items-center justify-between group"
+                                            className="w-full text-left px-8 py-5 hover:bg-primary/10 border-b border-border last:border-0 transition-colors flex items-center justify-between group"
                                         >
                                             <div>
                                                 <p className="font-black text-lg">{ex.name}</p>
@@ -268,7 +265,7 @@ export default function LogWorkout() {
                         </div>
 
                         {exercisesInSession.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-20 bg-white/50 dark:bg-white/5 rounded-[2.5rem] border border-dashed border-slate-200 dark:border-white/10 text-center">
+                            <div className="flex flex-col items-center justify-center py-20 bg-surface-highlight border border-border text-center">
                                 <div className="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
                                     <span className="material-icons-round text-4xl text-slate-300 dark:text-slate-700">fitness_center</span>
                                 </div>
@@ -278,7 +275,7 @@ export default function LogWorkout() {
                         ) : (
                             <div className="space-y-4">
                                 {exercisesInSession.map((ex, idx) => (
-                                    <div key={idx} className="group bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 p-6 rounded-[2rem] transition-all hover:shadow-xl">
+                                    <div key={idx} className="group bg-surface border border-border p-6 rounded-[2rem] transition-all hover:shadow-xl">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-5">
                                                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
@@ -313,7 +310,7 @@ export default function LogWorkout() {
                                     <button
                                         key={ex._id}
                                         onClick={() => selectExercise(ex)}
-                                        className="flex items-center p-5 bg-white dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-3xl hover:border-primary/50 transition-all group hover:shadow-xl"
+                                        className="flex items-center p-5 bg-surface border border-border rounded-3xl hover:border-primary/50 transition-all group hover:shadow-xl"
                                     >
                                         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                                             <span className="material-icons-round text-2xl">{ex.icon || 'fitness_center'}</span>
@@ -374,7 +371,7 @@ export default function LogWorkout() {
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Reps</label>
                                         <input
-                                            className="w-full bg-slate-100 dark:bg-white/10 border-none rounded-2xl py-5 text-center font-black text-2xl focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border-none rounded-2xl py-5 text-center font-black text-2xl focus:ring-2 focus:ring-primary/20 outline-none"
                                             placeholder="12"
                                             type="number"
                                             value={reps}
@@ -384,7 +381,7 @@ export default function LogWorkout() {
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Weight (kg)</label>
                                         <input
-                                            className="w-full bg-slate-100 dark:bg-white/10 border-none rounded-2xl py-5 text-center font-black text-2xl focus:ring-2 focus:ring-primary/20 outline-none"
+                                            className="w-full bg-surface-highlight border-none rounded-2xl py-5 text-center font-black text-2xl focus:ring-2 focus:ring-primary/20 outline-none"
                                             placeholder="60"
                                             type="number"
                                             value={weight}
@@ -409,7 +406,7 @@ export default function LogWorkout() {
                             </div>
                         </div>
                     ) : (
-                        <div className="bg-slate-900 border border-white/5 rounded-[2.5rem] p-8 space-y-8">
+                        <div className="bg-surface border border-border rounded-[2.5rem] p-8 space-y-8">
                             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Live Summary</h4>
 
                             <div className="grid grid-cols-2 gap-8">

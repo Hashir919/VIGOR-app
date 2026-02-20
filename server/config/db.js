@@ -11,10 +11,14 @@ const connectDB = async () => {
         }
         const conn = await mongoose.connect(uri);
         console.log(`MongoDB Connected: ${conn.connection.host}`);
+        return conn;
     } catch (error) {
         console.error(`MongoDB Connection Error: ${error.message}`);
         // Retry connection after 5 seconds
-        setTimeout(connectDB, 5000);
+        if (process.env.NODE_ENV !== 'production') {
+            setTimeout(connectDB, 5000);
+        }
+        throw error;
     }
 };
 

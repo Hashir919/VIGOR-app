@@ -36,36 +36,94 @@ router.get('/:id', async (req, res) => {
         const totalKm = workouts.reduce((sum, w) => sum + (w.distance || 0), 0);
 
         // Calculate Streak (Consecutive days with workouts)
-        let streak = 0;
-        if (workouts.length > 0) {
-            streak = 1;
-            let currentDate = new Date(workouts[0].date);
-            for (let i = 1; i < workouts.length; i++) {
-                const prevDate = new Date(workouts[i].date);
-                const diffTime = Math.abs(currentDate - prevDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        // Sort workouts by date descending
+        const sortedWorkouts = workouts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                if (diffDays === 1) {
-                    streak++;
-                    currentDate = prevDate;
-                } else if (diffDays > 1) {
-                    break;
+        let streak = 0;
+        if (sortedWorkouts.length > 0) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const lastWorkoutDate = new Date(sortedWorkouts[0].date);
+            lastWorkoutDate.setHours(0, 0, 0, 0);
+
+            // Check if last workout was today or yesterday to keep streak alive
+            const diffTime = Math.abs(today - lastWorkoutDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays <= 1) {
+                streak = 1;
+                let currentDate = lastWorkoutDate;
+
+                for (let i = 1; i < sortedWorkouts.length; i++) {
+                    const prevDate = new Date(sortedWorkouts[i].date);
+                    prevDate.setHours(0, 0, 0, 0);
+
+                    const timeDiff = Math.abs(currentDate - prevDate);
+                    const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                    if (dayDiff === 1) {
+                        streak++;
+                        currentDate = prevDate;
+                    } else if (dayDiff > 1) {
+                        break;
+                    }
                 }
             }
         }
 
-        // Calculate Badges (Simple logic: 1 badge per 5 workouts)
-        const badges = Math.floor(workouts.length / 5);
+        // Dynamic Badge Calculation
+        const dynamicAchievements = [];
 
-        // Level (1 level per 20km)
+        // "Early Bird" - 5 workouts before 7AM
+        const earlyBirdCount = workouts.filter(w => {
+            const date = new Date(w.date);
+            return date.getHours() < 7;
+        }).length;
+
+        if (earlyBirdCount >= 5) {
+            dynamicAchievements.push({
+                id: 'early_bird',
+                name: 'Early Bird',
+                description: '5 Workouts before 7am',
+                icon: 'wb_sunny',
+                dateEarned: new Date() // Ideally store when earned
+            });
+        }
+
+        // "Marathoner" - Total 42km
+        if (totalKm >= 42) {
+            dynamicAchievements.push({
+                id: 'marathoner',
+                name: 'Marathoner',
+                description: 'Ran 42km in total',
+                icon: 'directions_run',
+                dateEarned: new Date()
+            });
+        }
+
+        // "Consistency King" - 7 day streak
+        if (streak >= 7) {
+            dynamicAchievements.push({
+                id: 'consistency',
+                name: 'Consistency King',
+                description: '7 Day Workout Streak',
+                icon: 'local_fire_department',
+                dateEarned: new Date()
+            });
+        }
+
+        const badges = dynamicAchievements.length;
         const level = Math.floor(totalKm / 20) + 1;
 
         // Weekly Cardio Days (Count all active days in last 7 days)
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
         const uniqueCardioDays = new Set(
             workouts
-                .filter(w => new Date(w.date) >= sevenDaysAgo) // Count any workout
+                .filter(w => new Date(w.date) >= sevenDaysAgo)
                 .map(w => new Date(w.date).toDateString())
         );
         const weeklyCardioDays = uniqueCardioDays.size;
@@ -78,6 +136,11 @@ router.get('/:id', async (req, res) => {
 
         // Prepare response
         const userObj = user.toObject();
+
+        // Merge stored achievements with dynamic ones (deduplicating by ID)
+        const storedAchievements = userObj.achievements || [];
+        const allAchievements = [...dynamicAchievements]; // Prioritize dynamic for now
+
         userObj.stats = {
             ...userObj.stats,
             totalKm: Math.round(totalKm * 10) / 10,
@@ -85,11 +148,21 @@ router.get('/:id', async (req, res) => {
             badges,
             level
         };
+
         userObj.goals = {
             ...userObj.goals, // targets
             currentDailySteps: todaySteps,
             currentWeeklyCardio: weeklyCardioDays,
             currentDailyCalories: Math.round(todayCalories)
+        };
+
+        userObj.achievements = allAchievements;
+
+        // Defaults for preferences if missing
+        userObj.preferences = {
+            language: 'English (US)',
+            connectedDevices: [],
+            ...userObj.preferences
         };
 
         res.json(userObj);
@@ -99,12 +172,14 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// UPDATE user goals
+// UPDATE user profile/goals/preferences
 router.put('/:id', async (req, res) => {
     try {
+        const { email, password, role, ...updateData } = req.body; // Specifically exclude sensitive fields
+
         const user = await User.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
+            { $set: updateData },
             { new: true }
         );
         res.json(user);
