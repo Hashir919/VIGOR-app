@@ -87,9 +87,9 @@ const seedAdmin = async () => {
 seedAdmin();
 
 // Specific catch-all for /api routes to ensure they always return JSON
-app.all('/api/:path*', (req, res) => {
-    res.status(404).json({ message: `API route ${req.method} ${req.url} not found` });
-});
+app.use('/api', (req, res) => {
+  res.status(404).json({ message: 'API route not found' })
+})
 
 // Serve static assets in production
 const distPath = path.join(__dirname, '../dist');
