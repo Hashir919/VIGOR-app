@@ -87,7 +87,7 @@ const seedAdmin = async () => {
 seedAdmin();
 
 // Specific catch-all for /api routes to ensure they always return JSON
-app.all('/api/*', (req, res) => {
+app.all('/api/:path*', (req, res) => {
     res.status(404).json({ message: `API route ${req.method} ${req.url} not found` });
 });
 
@@ -96,7 +96,7 @@ const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath));
 
 // Catch-all route to serve index.html for SPA routing (only for non-API routes)
-app.get('*', (req, res) => {
+app.get('/:path*', (req, res) => {
     // If it's a GET request and not for an API, serve the app
     if (!req.path.startsWith('/api') && req.accepts('html')) {
         res.sendFile(path.join(distPath, 'index.html'));
