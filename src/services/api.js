@@ -1,367 +1,88 @@
+export const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://vigor-app.onrender.com');
+export const API_URL = `${BASE_URL}/api`;
 
-const BASE_URL = import.meta.env.VITE_API_URL || '';
-const API_URL = `${BASE_URL}/api`;
-
-
-const getHeaders = () => {
-    const token = localStorage.getItem('token');
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    return headers;
-};
-
-export const fetchWorkouts = async () => {
-    const res = await fetch(`${API_URL}/workouts`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch workouts');
-    return res.json();
-};
-
-export const createWorkout = async (data) => {
-    const res = await fetch(`${API_URL}/workouts`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error('Failed to create workout');
-    return res.json();
-};
-
-export const fetchLatestMetrics = async () => {
-    const res = await fetch(`${API_URL}/metrics/latest`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch metrics');
-    return res.json();
-};
-
-export const createMetric = async (data) => {
-    const res = await fetch(`${API_URL}/metrics`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error('Failed to create metric');
-    return res.json();
-};
-
-export const fetchUser = async (id = 'default') => {
-    // In a real app we'd pass ID, but here we just get the first user
-    const res = await fetch(`${API_URL}/users/${id}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch user');
-    return res.json();
-};
-
-export const fetchMetricHistory = async (range = '1M') => {
-    const res = await fetch(`${API_URL}/metrics/history?range=${range}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch metric history');
-    return res.json();
-};
-
-export const fetchPosts = async () => {
-    const res = await fetch(`${API_URL}/posts`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch posts');
-    return res.json();
-};
-
-export const updateUser = async (id, data) => {
-    const res = await fetch(`${API_URL}/users/${id}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to update user');
-    return res.json();
-};
-
-// Helper to handle responses safely
 const handleResponse = async (res) => {
     const contentType = res.headers.get('content-type');
-    let data;
+    let data = null;
 
     if (contentType && contentType.includes('application/json')) {
-        data = await res.json();
+        try {
+            data = await res.json();
+        } catch (e) {
+            throw new Error(`Invalid JSON response: ${e.message}`);
+        }
     } else {
         const text = await res.text();
         throw new Error(`Server returned non-JSON response (${res.status}): ${text.slice(0, 100)}...`);
     }
 
     if (!res.ok) {
-        throw new Error(data.message || data.error || `Request failed with status ${res.status}`);
+        throw new Error((data && (data.message || data.error)) || `Request failed with status ${res.status}`);
     }
 
     return data;
 };
 
-// Security & Auth API
-export const changePassword = async (currentPassword, newPassword) => {
-    const res = await fetch(`${API_URL}/auth/change-password`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ currentPassword, newPassword })
-    });
-    return handleResponse(res);
-};
-
-export const forgotPassword = async (email) => {
-    const res = await fetch(`${API_URL}/auth/forgot-password`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ email })
-    });
-    return handleResponse(res);
-};
-
-export const verifyResetCode = async (email, code) => {
-    const res = await fetch(`${API_URL}/auth/verify-reset-code`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ email, code })
-    });
-    return handleResponse(res);
-};
-
-export const resetPassword = async (email, code, newPassword) => {
-    const res = await fetch(`${API_URL}/auth/reset-password`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ email, code, newPassword })
-    });
-    return handleResponse(res);
-};
-
-// Dashboard API
-export const fetchDashboardData = async () => {
-    const res = await fetch(`${API_URL}/dashboard`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch dashboard data');
-    return res.json();
-};
-
-// Nutrition API
-export const fetchNutrition = async () => {
-    const res = await fetch(`${API_URL}/nutrition/latest`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch nutrition');
-    return res.json();
-};
-
-export const createNutrition = async (data) => {
-    const res = await fetch(`${API_URL}/nutrition`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to create nutrition entry');
-    return res.json();
-};
-
-export const logWater = async (amount = 0.25) => {
-    const res = await fetch(`${API_URL}/nutrition/water`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ amount })
-    });
-    if (!res.ok) throw new Error('Failed to log water');
-    return res.json();
-};
-
-// Nutrition Plans
-export const fetchNutritionPlans = async () => {
-    const res = await fetch(`${API_URL}/nutrition-plans`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch nutrition plans');
-    return res.json();
-};
-
-export const fetchActivePlan = async () => {
-    const res = await fetch(`${API_URL}/nutrition-plans/active`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch active plan');
-    return res.json();
-};
-
-export const createNutritionPlan = async (data) => {
-    const res = await fetch(`${API_URL}/nutrition-plans`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Failed to create nutrition plan');
+export const apiFetch = async (endpoint, options = {}) => {
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
-    return res.json();
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers
+    });
+    return handleResponse(res);
 };
 
-export const updateNutritionPlan = async (id, data) => {
-    const res = await fetch(`${API_URL}/nutrition-plans/${id}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to update nutrition plan');
-    return res.json();
-};
+export const fetchWorkouts = () => apiFetch('/workouts');
+export const createWorkout = (data) => apiFetch('/workouts', { method: 'POST', body: JSON.stringify(data) });
 
-export const activateNutritionPlan = async (id) => {
-    const res = await fetch(`${API_URL}/nutrition-plans/${id}/activate`, {
-        method: 'PUT',
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to activate nutrition plan');
-    return res.json();
-};
+export const fetchLatestMetrics = () => apiFetch('/metrics/latest');
+export const createMetric = (data) => apiFetch('/metrics', { method: 'POST', body: JSON.stringify(data) });
+export const fetchMetricHistory = (range = '1M') => apiFetch(`/metrics/history?range=${range}`);
 
-export const deleteNutritionPlan = async (id) => {
-    const res = await fetch(`${API_URL}/nutrition-plans/${id}`, {
-        method: 'DELETE',
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to delete nutrition plan');
-    return res.json();
-};
+export const fetchUser = (id = 'default') => apiFetch(`/users/${id}`);
+export const updateUser = (id, data) => apiFetch(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 
-// Meal Templates
-export const fetchMealTemplates = async () => {
-    const res = await fetch(`${API_URL}/meal-templates`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch meal templates');
-    return res.json();
-};
+export const fetchPosts = () => apiFetch('/posts');
 
-export const fetchMealTemplate = async (id) => {
-    const res = await fetch(`${API_URL}/meal-templates/${id}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch meal template');
-    return res.json();
-};
+export const changePassword = (currentPassword, newPassword) => apiFetch('/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) });
+export const forgotPassword = (email) => apiFetch('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
+export const verifyResetCode = (email, code) => apiFetch('/auth/verify-reset-code', { method: 'POST', body: JSON.stringify({ email, code }) });
+export const resetPassword = (email, code, newPassword) => apiFetch('/auth/reset-password', { method: 'POST', body: JSON.stringify({ email, code, newPassword }) });
 
-export const createMealTemplate = async (data) => {
-    const res = await fetch(`${API_URL}/meal-templates`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to create meal template');
-    return res.json();
-};
+export const fetchDashboardData = () => apiFetch('/dashboard');
 
-export const updateMealTemplate = async (id, data) => {
-    const res = await fetch(`${API_URL}/meal-templates/${id}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to update meal template');
-    return res.json();
-};
+export const fetchNutrition = () => apiFetch('/nutrition/latest');
+export const createNutrition = (data) => apiFetch('/nutrition', { method: 'POST', body: JSON.stringify(data) });
+export const logWater = (amount = 0.25) => apiFetch('/nutrition/water', { method: 'POST', body: JSON.stringify({ amount }) });
+export const logMeal = (data) => apiFetch('/nutrition/log-meal', { method: 'POST', body: JSON.stringify(data) });
+export const updateMeal = (mealId, data) => apiFetch(`/nutrition/meals/${mealId}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteMeal = (mealId) => apiFetch(`/nutrition/meals/${mealId}`, { method: 'DELETE' });
 
-export const deleteMealTemplate = async (id) => {
-    const res = await fetch(`${API_URL}/meal-templates/${id}`, {
-        method: 'DELETE',
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to delete meal template');
-    return res.json();
-};
+export const fetchNutritionPlans = () => apiFetch('/nutrition-plans');
+export const fetchActivePlan = () => apiFetch('/nutrition-plans/active');
+export const createNutritionPlan = (data) => apiFetch('/nutrition-plans', { method: 'POST', body: JSON.stringify(data) });
+export const updateNutritionPlan = (id, data) => apiFetch(`/nutrition-plans/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const activateNutritionPlan = (id) => apiFetch(`/nutrition-plans/${id}/activate`, { method: 'PUT' });
+export const deleteNutritionPlan = (id) => apiFetch(`/nutrition-plans/${id}`, { method: 'DELETE' });
 
-// Food Items
-export const searchFoodItems = async (query) => {
-    const res = await fetch(`${API_URL}/food-items/search?q=${encodeURIComponent(query)}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to search food items');
-    return res.json();
-};
+export const fetchMealTemplates = () => apiFetch('/meal-templates');
+export const fetchMealTemplate = (id) => apiFetch(`/meal-templates/${id}`);
+export const createMealTemplate = (data) => apiFetch('/meal-templates', { method: 'POST', body: JSON.stringify(data) });
+export const updateMealTemplate = (id, data) => apiFetch(`/meal-templates/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteMealTemplate = (id) => apiFetch(`/meal-templates/${id}`, { method: 'DELETE' });
 
-export const fetchFoodItem = async (id) => {
-    const res = await fetch(`${API_URL}/food-items/${id}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch food item');
-    return res.json();
-};
+export const searchFoodItems = (query) => apiFetch(`/food-items/search?q=${encodeURIComponent(query)}`);
+export const fetchFoodItem = (id) => apiFetch(`/food-items/${id}`);
+export const createFoodItem = (data) => apiFetch('/food-items', { method: 'POST', body: JSON.stringify(data) });
+export const fetchFoodCategories = () => apiFetch('/food-items/categories');
 
-export const createFoodItem = async (data) => {
-    const res = await fetch(`${API_URL}/food-items`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to create food item');
-    return res.json();
-};
-
-export const fetchFoodCategories = async () => {
-    const res = await fetch(`${API_URL}/food-items/categories`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch food categories');
-    return res.json();
-};
-
-// Meal Logging
-export const logMeal = async (data) => {
-    const res = await fetch(`${API_URL}/nutrition/log-meal`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to log meal');
-    return res.json();
-};
-
-export const updateMeal = async (mealId, data) => {
-    const res = await fetch(`${API_URL}/nutrition/meals/${mealId}`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Failed to update meal');
-    return res.json();
-};
-
-export const deleteMeal = async (mealId) => {
-    const res = await fetch(`${API_URL}/nutrition/meals/${mealId}`, {
-        method: 'DELETE',
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to delete meal');
-    return res.json();
-};
-
-// Exercise API
-export const searchExercises = async (params = {}) => {
-    const queryParams = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_URL}/exercises?${queryParams}`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to search exercises');
-    return res.json();
-};
-
-export const fetchPopularExercises = async () => {
-    const res = await fetch(`${API_URL}/exercises/popular`, {
-        headers: getHeaders()
-    });
-    if (!res.ok) throw new Error('Failed to fetch popular exercises');
-    return res.json();
-};
+export const searchExercises = (params = {}) => apiFetch(`/exercises?${new URLSearchParams(params).toString()}`);
+export const fetchPopularExercises = () => apiFetch('/exercises/popular');

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { apiFetch } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -24,32 +25,20 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        // Use relative path to work in both dev (via proxy) and prod (monolith)
-        // Or ensure we match the API_URL logic if it was exported.
-        // Since we are in Monolith mode, relative path is safest.
-        // Assuming /api prefix is standard.
-        const res = await fetch('/api/auth/login', {
+        const data = await apiFetch('/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Login failed');
-
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
     };
 
     const register = async (name, email, password) => {
-        const res = await fetch('/api/auth/register', {
+        const data = await apiFetch('/auth/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password }),
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Registration failed');
-
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);

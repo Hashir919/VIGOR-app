@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../services/api';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
@@ -7,13 +8,8 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch('/api/admin/stats', {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setStats(data);
-                }
+                const data = await apiFetch('/admin/stats');
+                setStats(data);
             } catch (error) {
                 console.error('Error fetching stats:', error);
             } finally {

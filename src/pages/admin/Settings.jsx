@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../services/api';
 
 const AdminSettings = () => {
     const [settings, setSettings] = useState({ maintenanceMode: false, registrationsEnabled: true });
@@ -13,15 +14,14 @@ const AdminSettings = () => {
 
     const fetchInitialData = async () => {
         try {
-            const [settingsRes, logsRes] = await Promise.all([
-                fetch('/api/admin/settings', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }),
-                fetch('/api/admin/logs', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+            const [settingsRes, logsRes] = await Promise.allSettled([
+                apiFetch('/admin/settings'),
+                apiFetch('/admin/logs')
             ]);
 
-            if (settingsRes.ok) setSettings(await settingsRes.json());
-            if (logsRes.ok) {
-                const logsData = await logsRes.json();
-                if (Array.isArray(logsData)) setLogs(logsData);
+            if (settingsRes.status === 'fulfilled') setSettings(settingsRes.value);
+            if (logsRes.status === 'fulfilled' && Array.isArray(logsRes.value)) {
+                setLogs(logsRes.value);
             }
         } catch (error) {
             console.error('Error fetching admin data:', error);
@@ -32,13 +32,8 @@ const AdminSettings = () => {
 
     const fetchLogs = async () => {
         try {
-            const res = await fetch('/api/admin/logs', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                if (Array.isArray(data)) setLogs(data);
-            }
+            const data = await apiFetch('/admin/logs');
+            if (Array.isArray(data)) setLogs(data);
         } catch (err) {
             console.error('Poll error:', err);
         }
@@ -47,15 +42,10 @@ const AdminSettings = () => {
     const toggleSetting = async (key) => {
         const newValue = !settings[key];
         try {
-            const res = await fetch('/api/admin/settings', {
+            const updated = await apiFetch('/admin/settings', {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
                 body: JSON.stringify({ [key]: newValue })
             });
-            const updated = await res.json();
             setSettings(updated);
         } catch (error) {
             console.error('Error updating settings:', error);

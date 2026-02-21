@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../services/api';
 
 const DataManager = () => {
     const [workouts, setWorkouts] = useState([]);
@@ -13,14 +14,9 @@ const DataManager = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const endpoint = activeTab === 'workouts' ? '/api/admin/workouts' : '/api/admin/metrics';
-            const res = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
+            const endpoint = activeTab === 'workouts' ? '/admin/workouts' : '/admin/metrics';
+            const data = await apiFetch(endpoint);
 
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-            const data = await res.json();
             if (Array.isArray(data)) {
                 if (activeTab === 'workouts') setWorkouts(data);
                 else setMetrics(data);
@@ -41,10 +37,9 @@ const DataManager = () => {
     const handleDelete = async (id) => {
         if (!window.confirm(`Are you sure you want to delete this ${activeTab === 'workouts' ? 'workout' : 'metric'}?`)) return;
         try {
-            const endpoint = activeTab === 'workouts' ? `/api/admin/workouts/${id}` : `/api/admin/metrics/${id}`;
-            await fetch(endpoint, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            const endpoint = activeTab === 'workouts' ? `/admin/workouts/${id}` : `/admin/metrics/${id}`;
+            await apiFetch(endpoint, {
+                method: 'DELETE'
             });
             fetchData();
         } catch (error) {

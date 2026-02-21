@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiFetch } from '../../services/api';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -13,10 +14,7 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch('/api/admin/users', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
-            const data = await res.json();
+            const data = await apiFetch('/admin/users');
             setUsers(data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -27,12 +25,8 @@ const UserManagement = () => {
 
     const toggleStatus = async (userId, currentStatus) => {
         try {
-            await fetch(`/api/admin/users/${userId}`, {
+            await apiFetch(`/admin/users/${userId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
                 body: JSON.stringify({ isActive: !currentStatus })
             });
             fetchUsers();
@@ -44,9 +38,8 @@ const UserManagement = () => {
     const deleteUser = async (userId) => {
         if (!window.confirm('WARNING: Deleting a user will permanently remove all their workouts and metrics. Proceed?')) return;
         try {
-            await fetch(`/api/admin/users/${userId}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            await apiFetch(`/admin/users/${userId}`, {
+                method: 'DELETE'
             });
             fetchUsers();
         } catch (error) {
@@ -57,19 +50,13 @@ const UserManagement = () => {
     const handleResetPassword = async () => {
         if (!newPass) return;
         try {
-            const res = await fetch(`/api/admin/users/${resettingPassword._id}/reset-password`, {
+            await apiFetch(`/admin/users/${resettingPassword._id}/reset-password`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
                 body: JSON.stringify({ newPassword: newPass })
             });
-            if (res.ok) {
-                alert(`Password reset for ${resettingPassword.name}`);
-                setResettingPassword(null);
-                setNewPass('');
-            }
+            alert(`Password reset for ${resettingPassword.name}`);
+            setResettingPassword(null);
+            setNewPass('');
         } catch (error) {
             console.error('Error resetting password:', error);
         }
