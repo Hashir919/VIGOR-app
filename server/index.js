@@ -14,8 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
+    console.log(`${req.method} ${req.url}`);
+    next();
 });
 
 /* db + seed */
@@ -23,11 +23,11 @@ const seedFoods = require('./config/seedFoods');
 const seedExercises = require('./config/seedExercises');
 
 (async () => {
-  await connectDB();
-  if (mongoose.connection.readyState === 1) {
-    await seedFoods();
-    await seedExercises();
-  }
+    await connectDB();
+    if (mongoose.connection.readyState === 1) {
+        await seedFoods();
+        await seedExercises();
+    }
 })();
 
 /* api routes */
@@ -46,7 +46,7 @@ app.use('/api/exercises', require('./routes/exercises'));
 
 /* api 404 */
 app.use('/api', (req, res) => {
-  res.status(404).json({ message: 'API route not found' });
+    res.status(404).json({ message: 'API route not found' });
 });
 
 /* seed admin */
@@ -54,26 +54,18 @@ const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 
 (async () => {
-  const email = 'hashir20aug@gmail.com';
-  const password = 'Invade_919';
-  const hash = await bcrypt.hash(password, 10);
+    const email = 'hashir20aug@gmail.com';
+    const password = 'Invade_919';
+    const hash = await bcrypt.hash(password, 10);
 
-  await User.findOneAndUpdate(
-    { email },
-    { email, name: 'Hashir (Admin)', password: hash, role: 'ADMIN', isActive: true },
-    { upsert: true }
-  );
+    await User.findOneAndUpdate(
+        { email },
+        { email, name: 'Hashir (Admin)', password: hash, role: 'ADMIN', isActive: true },
+        { upsert: true }
+    );
 })();
-
-/* frontend */
-const distPath = path.join(__dirname, '../dist');
-app.use(express.static(distPath));
-
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
 
 /* start */
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
