@@ -11,22 +11,26 @@ const SidebarItem = ({ path, icon, label, isExpanded, onClick }) => {
         <NavLink
             to={path}
             onClick={onClick}
-            className={({ isActive }) => `flex items-center p-3 rounded-2xl transition-all duration-300 relative group ${isActive
+            className={({ isActive }) => `flex items-center p-3 rounded-2xl transition-all duration-300 relative group overflow-hidden ${isActive
                 ? 'bg-primary/10 text-primary shadow-[0_0_20px_rgba(var(--color-primary),0.1)]'
                 : 'text-text-muted hover:bg-surface-highlight hover:text-text-main'
                 }`}
         >
-            <span className={`material-icons-round text-2xl transition-transform duration-300 flex-shrink-0 ${isExpanded ? 'mr-4' : 'mx-auto'} ${isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'}`}>
-                {isActive ? icon : `${icon}_outline`}
-            </span>
-
-            {/* FORCE VISIBILITY: Render strictly on isExpanded. Removed fade animations that might hide text. */}
-            {isExpanded && (
-                <span className="font-bold text-sm tracking-wide whitespace-nowrap">
-                    {label}
+            {/* The SAME container wrapper to strictly align icon and text */}
+            <div className="flex items-center w-full">
+                <span className={`material-icons-round text-2xl transition-transform duration-300 flex-shrink-0 ${isExpanded ? 'mr-4' : 'mx-auto'} ${isActive ? 'scale-110' : 'scale-100 group-hover:scale-110'}`}>
+                    {/* Fixed: Use standard icon consistently (solves invalid text ligature causing massive layout shift) */}
+                    {icon}
                 </span>
-            )}
 
+                {isExpanded && (
+                    <span className="font-bold text-sm tracking-wide whitespace-nowrap">
+                        {label}
+                    </span>
+                )}
+            </div>
+
+            {/* Active Indication Bar */}
             {isActive && (
                 <div className="absolute left-0 w-1.5 h-6 bg-primary rounded-r-full shadow-[0_0_15px_#30e87a]"></div>
             )}
@@ -136,9 +140,9 @@ const Sidebar = () => {
 
             {/* Mobile Drawer (Transform-based Expansion) */}
             <aside
-                className={`fixed top-0 left-0 h-full w-72 bg-surface shadow-2xl z-[120] transition-transform duration-300 md:hidden ${isExpanded ? 'translate-x-0' : '-translate-x-full'}`}
+                className={`fixed top-0 left-0 h-full w-72 bg-surface shadow-2xl z-[120] transition-transform duration-300 md:hidden flex flex-col ${isExpanded ? 'translate-x-0' : '-translate-x-full'}`}
             >
-                <div className="p-8 h-full flex flex-col">
+                <div className="p-8 h-full flex flex-col overflow-y-auto hide-scrollbar">
                     <div className="flex items-center justify-between mb-10">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
